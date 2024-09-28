@@ -1,0 +1,7 @@
+version: '3.3'
+services:
+  destra-storagenode:
+    build:
+      context: .
+      dockerfile: DOCKERFILE
+    image: destra-storagenode:latest

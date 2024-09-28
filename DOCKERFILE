@@ -1,0 +1,24 @@
+FROM ubuntu
+
+RUN apt update
+RUN apt upgrade -y
+RUN apt install wget -y
+
+#RUN wget https://raw.githubusercontent.com/DestraNetwork/destra-storage-node/main/scripts/destra_storage_ubuntu_setup.sh
+
+WORKDIR /usr/src/app
+
+#COPY package*.json ./
+
+#RUN npm install
+# If you are building your code for production
+# RUN npm ci --omit=dev
+
+#COPY . .
+
+#EXPOSE 3000
+#CMD [ "node", "server.js" ]
+
+#CMD [ "node", "server.js" ]
+
+CMD ["sleep", "infinity"]
