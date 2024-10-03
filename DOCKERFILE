@@ -12,43 +12,28 @@ SHELL ["/bin/bash", "-c"]
 # Now any RUN command will use Bash
 RUN echo "Switched to Bash"
 
-
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
 RUN source ~/.nvm/nvm.sh
 
+#node.js process manager - used for pumping logs back to standard out.
+RUN npm install pm2 -g
 
-RUN mkdir /usr/src/destra-storage-node
-WORKDIR /usr/src/destra-storage-node
-
-COPY .env .
-COPY start-destra.sh .
-
-RUN mkdir /tmp/blockstore
-
-
-
+### modifying setup script to remove interactivity for repeatable ci/cd
+### TO DO - Modify setup script with commands to maintain updates from dev team.
 #RUN wget https://raw.githubusercontent.com/DestraNetwork/destra-storage-node/main/scripts/destra_storage_ubuntu_setup.sh
+WORKDIR /usr/src/destra
 COPY destra_storage_ubuntu_setup.sh .
 RUN chmod +x destra_storage_ubuntu_setup.sh
 RUN ./destra_storage_ubuntu_setup.sh
 
 
- 
-#COPY package*.json ./
+# RUN mkdir /usr/src/destra-storage-node
+WORKDIR /usr/src/destra/destra-storage-node
 
-#RUN npm install
-# If you are building your code for production
-# RUN npm ci --omit=dev
+COPY .env .
+COPY start-destra.sh .
+RUN chmod +x start-destra.sh
 
-#COPY . .
-
-#EXPOSE 3000
-#CMD [ "node", "server.js" ]
-
-#CMD [ "node", "server.js" ]
-
-#CMD ["sleep", "infinity"]
-
-#ENTRYPOINT tmux new-session -d -s storage-node; tmux send-keys -t storage-node "npm run destra-storage-node" C-m; echo "Destra Storage Node setup completed and running in tmux session 'storage-node'." ; /bin/bash
-CMD ["tail", "-f", "/dev/null"]
+CMD ["/bin/bash","start-destra.sh"]
 #CMD ["tail", "-f", "/dev/null"]
+#CMD ["pm2", "start", "destra-storage-node", "--attach"]
